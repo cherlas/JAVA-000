@@ -15,11 +15,11 @@ import org.slf4j.LoggerFactory;
 
 
 public class HttpInboundServer {
-    private static Logger logger = LoggerFactory.getLogger(HttpInboundServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpInboundServer.class);
 
-    private int port;
+    private final int port;
 
-    private String proxyServer;
+    private final String proxyServer;
 
     public HttpInboundServer(int port, String proxyServer) {
         this.port = port;
@@ -44,7 +44,8 @@ public class HttpInboundServer {
                     .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
 
             b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
-                    .handler(new LoggingHandler(LogLevel.INFO)).childHandler(new HttpInboundInitializer(this.proxyServer));
+                    .handler(new LoggingHandler(LogLevel.INFO))
+                    .childHandler(new HttpInboundInitializer(this.proxyServer));
 
             Channel ch = b.bind(port).sync().channel();
             logger.info("开启netty http服务器，监听地址和端口为 http://127.0.0.1:" + port + '/');

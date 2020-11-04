@@ -11,12 +11,10 @@ import org.slf4j.LoggerFactory;
 public class HttpInboundHandler extends ChannelInboundHandlerAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpInboundHandler.class);
-    private final String proxyServer;
     private final OkhttpOutboundHandler handler;
 
     public HttpInboundHandler(String proxyServer) {
-        this.proxyServer = proxyServer;
-        handler = new OkhttpOutboundHandler(this.proxyServer);
+        handler = new OkhttpOutboundHandler(proxyServer);
     }
 
     @Override
@@ -27,14 +25,10 @@ public class HttpInboundHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {
-            //logger.info("channelRead流量接口请求开始，时间为{}", startTime);
             FullHttpRequest fullRequest = (FullHttpRequest) msg;
+            fullRequest.headers().add("test_route","8888-input");
             String uri = fullRequest.uri();
             logger.info("接收到的请求url为{}", uri);
-//            if (uri.contains("/test")) {
-//                handlerTest(fullRequest, ctx);
-//            }
-
             handler.handle(fullRequest, ctx);
 
         } catch (Exception e) {
@@ -43,34 +37,4 @@ public class HttpInboundHandler extends ChannelInboundHandlerAdapter {
             ReferenceCountUtil.release(msg);
         }
     }
-
-//    private void handlerTest(FullHttpRequest fullRequest, ChannelHandlerContext ctx) {
-//        FullHttpResponse response = null;
-//        try {
-//            String value = "hello,kimmking";
-//            response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(value.getBytes("UTF-8")));
-//            response.headers().set("Content-Type", "application/json");
-//            response.headers().setInt("Content-Length", response.content().readableBytes());
-//
-//        } catch (Exception e) {
-//            logger.error("处理测试接口出错", e);
-//            response = new DefaultFullHttpResponse(HTTP_1_1, NO_CONTENT);
-//        } finally {
-//            if (fullRequest != null) {
-//                if (!HttpUtil.isKeepAlive(fullRequest)) {
-//                    ctx.write(response).addListener(ChannelFutureListener.CLOSE);
-//                } else {
-//                    response.headers().set(CONNECTION, KEEP_ALIVE);
-//                    ctx.write(response);
-//                }
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-//        cause.printStackTrace();
-//        ctx.close();
-//    }
-
 }
