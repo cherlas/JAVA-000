@@ -1,5 +1,6 @@
 package gateway.inbound;
 
+import gateway.filter.HttpInboundFilterImpl;
 import gateway.outbound.okhttp.OkhttpOutboundHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -26,7 +27,7 @@ public class HttpInboundHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {
             FullHttpRequest fullRequest = (FullHttpRequest) msg;
-            fullRequest.headers().add("test_route","8888-input");
+            new HttpInboundFilterImpl().filter(fullRequest, ctx);
             String uri = fullRequest.uri();
             logger.info("接收到的请求url为{}", uri);
             handler.handle(fullRequest, ctx);
