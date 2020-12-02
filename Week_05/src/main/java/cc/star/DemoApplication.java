@@ -1,4 +1,4 @@
-package com.example.demo;
+package cc.star;
 
 import com.example.school.School;
 import org.springframework.boot.SpringApplication;

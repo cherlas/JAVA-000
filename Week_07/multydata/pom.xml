@@ -8,10 +8,10 @@
         <version>2.3.0.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
-    <artifactId>week05</artifactId>
+    <groupId>cc.star</groupId>
+    <artifactId>multiple-data</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>week05</name>
+    <name>multiple-data</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
